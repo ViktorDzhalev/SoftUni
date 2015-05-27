@@ -35,11 +35,13 @@ socialNetworkBaseApp.factory('authenticationData',
         }
 
         function saveLoggedUser(user) {
-            loggedUser = user;
+            $localStorage.$default({
+                'loggedUser': user
+            });
         }
 
         function getLoggedUser() {
-            return loggedUser;
+            return $localStorage.loggedUser;
         }
 
         return {
