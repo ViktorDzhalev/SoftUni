@@ -1,7 +1,7 @@
 'use strict';
 
 socialNetworkBaseApp.factory('authenticationData',
-    ['$sessionStorage', '$localStorage', function ($sessionStorage, $localStorage) {
+    ['$sessionStorage', '$localStorage','infoService', function ($sessionStorage, $localStorage,infoService) {
         var loggedUser = false;
 
         function saveInLocalStorage(sessionToken, tokenType){
@@ -41,6 +41,7 @@ socialNetworkBaseApp.factory('authenticationData',
         }
 
         function getLoggedUser() {
+            //infoService.error('VVVVVVVVVVVVVVVVVVVVVVVVVV')
             return $localStorage.loggedUser;
         }
 

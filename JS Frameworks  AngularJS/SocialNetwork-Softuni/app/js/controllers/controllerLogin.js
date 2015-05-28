@@ -20,7 +20,7 @@ socialNetworkBaseApp.controller('controllerLogin',
                         .$promise
                         .then(function (data) {
                             authenticationData.saveLoggedUser(data);
-                            infoService.success('Login successful')
+                            //infoService.success('Login successful')
                             $scope.loginForm.$setPristine();
                             reloadRoute()
                         }, function (error) {

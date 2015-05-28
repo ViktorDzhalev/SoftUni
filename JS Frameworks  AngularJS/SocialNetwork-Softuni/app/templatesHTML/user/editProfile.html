@@ -8,18 +8,18 @@
 
 <div class="row">
     <div class="col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3"  ng-controller="controllerEditProfile">
-        <form name="editProfileForm" class="form-horizontal" autocomplete="off">
+        <form name="editProfileForm" class="form-horizontal" >
             <fieldset>
                 <div class="form-group">
                     <label for="registerName" class="col-md-3 control-label">Name</label>
                     <div class="col-md-9">
-                        <input type="text" class="form-control" ng-init="editUserData.name = editUser.name" ng-model="editUserData.name" id="registerName" required="required" placeholder="Name">
+                        <input type="text" class="form-control"  ng-model="editUserData.name" id="registerName"  placeholder="{{editUser.name}}">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail" class="col-md-3 control-label">Email</label>
                     <div class="col-md-9">
-                        <input type="email" class="form-control" ng-init="editUserData.email = editUser.email" ng-model="editUserData.email" id="inputEmail" required="required" placeholder="Email">
+                        <input type="email" class="form-control"  ng-model="editUserData.email" id="inputEmail" required="required" placeholder="{{editUser.email}}">
                     </div>
                 </div>
                 <div class="form-group">
