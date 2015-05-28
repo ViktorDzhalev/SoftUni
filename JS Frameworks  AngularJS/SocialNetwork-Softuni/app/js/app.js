@@ -35,7 +35,7 @@ var socialNetworkBaseApp = angular
             })
             .when('/user/password', {
                 templateUrl: 'templatesHTML/user/changePassword.html',
-                //controller: 'controllerPassword',
+                controller: 'controllerPassword',
                 resolve:{
                     isLogged: function($location, $sessionStorage, $localStorage){
                         if(!$sessionStorage.authorization && !$localStorage.authorization){

@@ -1,4 +1,4 @@
-<nav class="navbar label-success" ng-controller="controllerHeader">
+<nav class="navbar label-success navbar-static-top"  ng-controller="controllerHeader">
     <div class="container-fluid">
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -6,6 +6,9 @@
                 <li class="active"><a href="#/">News feed<span class="sr-only">(current)</span></a></li>
                 <li><a href="#/user/editProfile">Edit prifile</a></li>
                 <li><a href="#/user/password">Change password</a></li>
+                <li data-toggle="modal" data-target="#requests"><a href="" ng-click="showRequestsDetail()">Friends requests: <span class="badge">{{requestsCount}}</span></a>
+                    <div friends-request></div>
+                </li>
                 <li><a href="#/logout">Logout</a></li>
                 <li><a href="#">  Welcome {{user.name}}</a></li>
             </ul>
@@ -13,9 +16,10 @@
             <form id="search" class="navbar-form navbar-right" role="search">
                 <div class="form-group">
                     <input type="text" class="form-control" ng-model="searchTerm" ng-change="searchUsers(searchTerm)" placeholder="Search users">
-                    <div searchUserResults ng-if="searchResultsShown"></div>
+                    <div search-user ng-if="searchResultsShown"></div>
                 </div>
             </form>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
+

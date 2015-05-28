@@ -27,7 +27,7 @@ socialNetworkBaseApp.controller('controllerEditProfile',
                 .$promise
                 .then(function (data) {
                     $scope.editProfileForm.$setPristine();
-                   // authenticationData.saveLoggedUser(user);
+
 
                     $scope.editUser.name = user.name;
                     $scope.editUser.email = user.email;

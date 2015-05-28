@@ -1,6 +1,6 @@
 socialNetworkBaseApp.controller('controllerHeader',
-    ['$scope', '$location', '$route', 'userData', 'authenticationData','infoService',
-        function ($scope, $location, $route, userData, authenticationData,infoService) {
+    ['$scope', '$location', '$route', 'userData', 'authenticationData','infoService','friendsData',
+        function ($scope, $location, $route, userData, authenticationData,infoService,friendsData) {
 
             $scope.isActive = function (locationHTML) {
                 return locationHTML === $location.path();
@@ -11,6 +11,28 @@ socialNetworkBaseApp.controller('controllerHeader',
             $scope.searchUsers = searchUsers;
             $scope.searchResultsShown = false;
 
+            $scope.showRequestsDetail = showRequestsDetail;
+            $scope.requestDetailsShown = false;
+            $scope.searchUsers = searchUsers;
+            $scope.searchResultsShown = false;
+          //  $scope.defaultProfileImageData = defaultProfileImageData;
+
+            friendsData.getFriendRequests()
+                .$promise
+                .then(function (data) {
+                    $scope.requestsCount = data.length;
+                    $scope.requests = data;
+                }, function (error) {
+                    toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                    credentials.deleteCredentials();
+                    $route.reload();
+                });
+
+            function showRequestsDetail() {
+                if($scope.requestsCount) {
+                    $scope.requestDetailsShown = true;
+                }
+            }
             function searchUsers(searchTerm) {
                 userData.searchUsersByName(searchTerm)
                     .$promise

@@ -23,6 +23,9 @@ socialNetworkBaseApp.factory('infoService', [function () {
         notyData.timeout = 2000;
         noty(notyData);
     }
+    function request(){
+        notyData.info()
+    }
 
     return {
         success: success,

@@ -1,6 +1,6 @@
 'use strict';
 
-socialNetworkBaseApp.directive('usersSearchResults', function () {
+socialNetworkBaseApp.directive('searchUser', function () {
     return {
         templateUrl: 'templatesHTML/user/searchUserResults.html',
         restrict: 'A',
