@@ -8,7 +8,7 @@ socialNetworkBaseApp.controller('controllerRegister',
             userData.register(user)
                 .$promise
                 .then(function (data) {
-                    $scope.user = {};
+                    authenticationData.saveLoggedUser(user);
                     authenticationData.saveInSessionStorage(data.access_token, data.token_type);
                     $scope.registerForm.$setPristine();
                     $location.path('/');

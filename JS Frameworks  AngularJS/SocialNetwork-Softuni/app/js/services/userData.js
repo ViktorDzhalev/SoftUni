@@ -68,6 +68,21 @@ socialNetworkBaseApp.factory('userData', ['$resource', 'baseUrl','authentication
                 .put(password);
         }
 
+        function searchUsersByName(name) {
+            var authorization = authenticationData.getAuthorization();
+            return $resource(
+                baseUrl + 'users/search?searchTerm=' + name,
+                null,
+                {
+                    'get': {
+                        method: 'GET',
+                        isArray: true,
+                        headers: {'Authorization': authorization}
+                    }
+                })
+                .get();
+        }
+
 
             return {
                 login: loginUser,
@@ -75,7 +90,8 @@ socialNetworkBaseApp.factory('userData', ['$resource', 'baseUrl','authentication
                 logout: logoutUser,
                 edit: editUser,
                 getLoggedUserData: getLoggedUserData,
-                changePassword: changePassword
+                changePassword: changePassword,
+                searchUsersByName: searchUsersByName
 
     }
 }]);
