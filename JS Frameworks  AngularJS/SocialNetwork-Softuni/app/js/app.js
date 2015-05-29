@@ -33,6 +33,17 @@ var socialNetworkBaseApp = angular
                     }
                 }
             })
+            .when('/users/:username', {
+                templateUrl: 'partials/user/user-wall.html',
+                controller: 'UserWallController',
+                resolve:{
+                    isLogged: function($location, $sessionStorage, $localStorage){
+                        if(!$sessionStorage.authorization && !$localStorage.authorization){
+                            $location.path('/');
+                        }
+                    }
+                }
+            })
             .when('/user/password', {
                 templateUrl: 'templatesHTML/user/changePassword.html',
                 controller: 'controllerPassword',

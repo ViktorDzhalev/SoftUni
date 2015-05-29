@@ -18,13 +18,28 @@ socialNetworkBaseApp.controller('userWallController',
        // $scope.allCommentsShown = false;
        // $scope.showAllComments = showAllComments;
        // $scope.showLessComments = showLessComments;
-        //$scope.commentButtonName = 'Comment';
+        $scope.commentButtonName = 'Comment';
+        $scope.editButtonName = 'Edit post';
        // $scope.unlikeComment = unlikeComment;
        // $scope.likeComment = likeComment;
         //$scope.deleteComment = deleteComment;
-
+        $scope.show = false;
+        $scope.showEditPost = false;
+        $scope.idPost = 1;
+        $scope.idPostComment =1;
         $scope.userPreviewShown = false;
         //$scope.showUserPreview = showUserPreview;
+
+        $scope.commentEdit= function (id){
+            $scope.show = !$scope.show;
+            $scope.idPost = id;
+            console.log(12);
+        };
+
+        $scope.editPost= function (id){
+            $scope.showEditPost = !$scope.showEditPost;
+            $scope.idPostComment = id;
+        };
 
         getPosts();
         if($routeParams.username) {
