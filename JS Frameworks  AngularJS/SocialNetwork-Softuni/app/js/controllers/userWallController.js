@@ -1,27 +1,27 @@
 'use strict';
 
 socialNetworkBaseApp.controller('userWallController',
-    ['$scope', '$route', '$routeParams', 'userData', 'friendsData', 'postData', 'authenticationData', 'infoService', 'defaultProfileImageData', 'defaultCoverImageData', function ($scope, $route, $routeParams, userData, friendsData, postData, authenticationData, infoService, defaultProfileImageData, defaultCoverImageData) {
+    ['$scope', '$route', '$routeParams', 'userData', 'friendsData', 'postData', 'authenticationData', 'infoService', function ($scope, $route, $routeParams, userData, friendsData, postData, authenticationData, infoService) {
         var defaultStartPostId = 0,
             defaultPageSize = 5,
             defaultNotificationTimeout = 2000;
         $scope.user = authenticationData.getLoggedUser();
-        $scope.defaultProfileImageData = defaultProfileImageData;
+       // $scope.defaultProfileImageData = defaultProfileImageData;
         $scope.sendFriendRequest = sendFriendRequest;
         $scope.wallOwnerUsername = $routeParams.username;
 
-        $scope.submitPost = submitPost;
-        $scope.deletePost = deletePost;
-        $scope.unlikePost = unlikePost;
-        $scope.likePost = likePost;
+        //$scope.submitPost = submitPost;
+      //  $scope.deletePost = deletePost;
+       // $scope.unlikePost = unlikePost;
+        //$scope.likePost = likePost;
 
-        $scope.allCommentsShown = false;
-        $scope.showAllComments = showAllComments;
-        $scope.showLessComments = showLessComments;
-        $scope.commentButtonName = 'Comment';
-        $scope.unlikeComment = unlikeComment;
-        $scope.likeComment = likeComment;
-        $scope.deleteComment = deleteComment;
+       // $scope.allCommentsShown = false;
+       // $scope.showAllComments = showAllComments;
+       // $scope.showLessComments = showLessComments;
+        //$scope.commentButtonName = 'Comment';
+       // $scope.unlikeComment = unlikeComment;
+       // $scope.likeComment = likeComment;
+        //$scope.deleteComment = deleteComment;
 
         $scope.userPreviewShown = false;
         //$scope.showUserPreview = showUserPreview;
