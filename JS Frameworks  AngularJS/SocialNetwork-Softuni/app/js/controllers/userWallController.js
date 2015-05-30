@@ -11,7 +11,7 @@ socialNetworkBaseApp.controller('userWallController',
         $scope.sendFriendRequest = sendFriendRequest;
         $scope.wallOwnerUsername = $routeParams.username;
 
-        //$scope.submitPost = submitPost;
+        $scope.submitPost = submitPost;
       //  $scope.deletePost = deletePost;
        // $scope.unlikePost = unlikePost;
         //$scope.likePost = likePost;
@@ -94,6 +94,56 @@ socialNetworkBaseApp.controller('userWallController',
             }
         }
 
+        function submitPost(postContent) {
+            var post = {
+                postContent: postContent,
+                username: $scope.wallOwner
+            };
+
+            postData.addPost(post)
+                .$promise
+                .then(function (data) {
+                    $scope.posts.unshift(data);
+                    $route.reload();
+                }, function (error) {
+                   //toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                })
+        }
+
+         //Edit post
+
+        $scope.editPostFormShown = false;
+        $scope.editPostFormPostId = null;
+        $scope.showEditPostForm = showEditPostForm;
+        $scope.closeEditPostForm = closeEditPostForm;
+        $scope.editPost = editPost;
+
+        function showEditPostForm(postId) {
+            $scope.editPostFormShown = true;
+            $scope.editPostFormPostId = postId;
+        }
+
+        function closeEditPostForm(){
+            $scope.editPostFormShown = false;
+            $scope.editPostFormPostId = null;
+        }
+
+        function editPost(postId, postContent) {
+            $scope.posts.forEach(function (post) {
+                if(post.id == postId && $scope.user.username == post.author.username) {
+                    postData.editPost(postId, postContent)
+                        .$promise
+                        .then(function (data) {
+                            $scope.editPostFormShown = false;
+                            $scope.editPostFormPostId = null;
+                            post.postContent = data.content;
+                            //toaster.pop('error', 'Success!', 'Post edited successfully!', defaultNotificationTimeout);
+                        }, function (error) {
+                           // toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                        });
+                }
+            });
+        }
 
         function sendFriendRequest(username, userType) {
             if(userType == 'wallOwner') {
