@@ -15,7 +15,6 @@ socialNetworkBaseApp.controller('controllerHeader',
             $scope.requestDetailsShown = false;
             $scope.searchUsers = searchUsers;
             $scope.searchResultsShown = false;
-          //  $scope.defaultProfileImageData = defaultProfileImageData;
 
             friendsData.getFriendRequests()
                 .$promise

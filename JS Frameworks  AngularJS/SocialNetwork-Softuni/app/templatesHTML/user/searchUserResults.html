@@ -1,8 +1,7 @@
 <ul id="search-results" class="list-group">
     <li class="list-group-item" ng-repeat="user in searchResults">
         <a href="#/users/{{user.username}}" class="list-group-item">
-            <img class="img-thumbnail" src="" ng-src="{{user.profileImageData}}" alt="{{user.name}}" ng-if="user.profileImageData"/>
-            <img class="img-thumbnail" src="" ng-src="{{defaultProfileImageData}}" alt="{{user.name}}" ng-if="!user.profileImageData"/>
+            <img class="img-thumbnail" src="" ng-src="{{user.profileImageData}}" alt="img" ng-if="user.profileImageData"/>
             <span class="list-group-item-heading">{{user.name}}</span>
         </a>
     </li>

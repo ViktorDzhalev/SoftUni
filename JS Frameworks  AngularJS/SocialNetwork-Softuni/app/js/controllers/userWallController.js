@@ -4,17 +4,16 @@ socialNetworkBaseApp.controller('userWallController',
     ['$scope', '$route', '$routeParams', 'userData', 'friendsData', 'postData', 'authenticationData', 'infoService',
         function ($scope, $route, $routeParams, userData, friendsData, postData, authenticationData, infoService) {
         var defaultStartPostId = 0,
-            defaultPageSize = 5,
-            defaultNotificationTimeout = 2000;
+            defaultPageSize = 5;
+
         $scope.user = authenticationData.getLoggedUser();
-       // $scope.defaultProfileImageData = defaultProfileImageData;
         $scope.sendFriendRequest = sendFriendRequest;
         $scope.wallOwnerUsername = $routeParams.username;
-
+        $scope.isUserWall = false;
         $scope.submitPost = submitPost;
-      //  $scope.deletePost = deletePost;
-       // $scope.unlikePost = unlikePost;
-        //$scope.likePost = likePost;
+        $scope.deletePost = deletePost;
+        $scope.unlikePost = unlikePost;
+        $scope.likePost = likePost;
 
        // $scope.allCommentsShown = false;
        // $scope.showAllComments = showAllComments;
@@ -29,7 +28,7 @@ socialNetworkBaseApp.controller('userWallController',
         $scope.idPost = 1;
         $scope.idPostComment =1;
         $scope.userPreviewShown = false;
-        //$scope.showUserPreview = showUserPreview;
+        $scope.showUserPreview = showUserPreview;
 
         $scope.commentEdit= function (id){
             $scope.show = !$scope.show;
@@ -48,6 +47,7 @@ socialNetworkBaseApp.controller('userWallController',
                 .$promise
                 .then(function (data) {
                     $scope.userData = data;
+                    $scope.wallOwnerName = $scope.userData.name;
                     if($scope.user.username === $routeParams.username || $scope.userData.isFriend === true) {
                         $scope.isFriendOrLoggedUser = true;
                         $scope.wallOwner = $scope.userData.username;
@@ -76,6 +76,7 @@ socialNetworkBaseApp.controller('userWallController',
 
         function getPosts() {
             if(!$routeParams.username) {
+                $scope.isUserWall = false;
                 postData.getNewsFeed(defaultStartPostId, defaultPageSize)
                     .$promise
                     .then(function (data) {
@@ -84,6 +85,7 @@ socialNetworkBaseApp.controller('userWallController',
                        // toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
                     });
             } else {
+                $scope.isUserWall = true;
                 postData.getUserWall($routeParams.username, defaultStartPostId, defaultPageSize)
                     .$promise
                     .then(function (data) {
@@ -92,6 +94,60 @@ socialNetworkBaseApp.controller('userWallController',
                        //toaster.pop('error', 'Error!', error.status);
                     });
             }
+        }
+
+
+        function unlikePost(postId) {
+            $scope.posts.forEach(function (post) {
+                if(post.id == postId) {
+                    if(post.author.isFriend || post.wallOwner.isFriend || $scope.user.username == post.author.username) {
+                        postData.unlikePost(postId)
+                            .$promise
+                            .then(function (data) {
+                                post.liked = false;
+                                post.likesCount--;
+                            }, function (error) {
+                                //toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                            });
+                    } else {
+                        //toaster.pop('error', 'Error!', 'You can`t unlike this post!', defaultNotificationTimeout);
+                    }
+                }
+            });
+        }
+
+        function likePost(postId) {
+            $scope.posts.forEach(function (post) {
+                if(post.id == postId) {
+                    if(post.author.isFriend || post.wallOwner.isFriend || $scope.user.username == post.author.username) {
+                        postData.likePost(postId)
+                            .$promise
+                            .then(function (data) {
+                                post.liked = true;
+                                post.likesCount++;
+                            }, function (error) {
+                               // toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                            });
+                    } else {
+                       // toaster.pop('error', 'Error!', 'You can`t like this post!', defaultNotificationTimeout);
+                    }
+                }
+            });
+        }
+
+        function deletePost(postId) {
+                $scope.posts.forEach(function (post, index, object) {
+                if(post.id == postId) {
+                    postData.deletePost(postId)
+                        .$promise
+                        .then(function (data) {
+                           //toaster.pop('success', 'Success!', 'Post deleted successfully.', defaultNotificationTimeout);
+                            object.splice(index, 1);
+                        }, function (error) {
+                           // toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                        });
+                }
+            })
         }
 
         function submitPost(postContent) {
@@ -145,35 +201,45 @@ socialNetworkBaseApp.controller('userWallController',
             });
         }
 
-        function sendFriendRequest(username, userType) {
-            if(userType == 'wallOwner') {
-                friendsData.sendFriendRequest(username)
-                    .$promise
-                    .then(function (data) {
-                        $scope.userData.hasPendingRequest = true;
-                        $scope.buttonName = 'Pending request';
-                        $scope.disabledButton = 'disabled';
-                        toaster.pop('success', 'Success!', data.message, defaultNotificationTimeout);
-                    }, function (error) {
-                        toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
-                    });
-            } else if(userType == 'postAuthor' || userType == 'commentAuthor') {
-                friendsData.sendFriendRequest(username)
-                    .$promise
-                    .then(function (data) {
+        function sendFriendRequest(username) {
+            friendsData.sendFriendRequest(username)
+                .$promise
+                .then(function (data) {
+                    $scope.userData.hasPendingRequest = true;
+                    $scope.buttonName = 'Pending request';
+                    $scope.disabledButton = 'disabled';
+                   // toaster.pop('success', 'Success!', data.message, defaultNotificationTimeout);
+                }, function (error) {
+                   //toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                });
+
+        }
+
+        function showUserPreview(username) {
+            $scope.userFriendStatus = 'Getting status...';
+            $scope.userHoverButtonType = 'disabled';
+
+            userData.getUserPreviewData(username)
+                .$promise
+                .then(function (data) {
+                    if(data.username == $scope.user.username) {
+                        $scope.userFriendStatus = 'Me';
+                        $scope.userHoverButtonType = 'disabled';
+                    } else if(data.isFriend) {
+                        $scope.userFriendStatus = 'Friend';
+                        $scope.userHoverButtonType = 'disabled';
+                    } else if(!data.isFriend && data.hasPendingRequest) {
                         $scope.userFriendStatus = 'Pending';
                         $scope.userHoverButtonType = 'disabled';
+                    } else if(!data.isFriend && !data.hasPendingRequest) {
+                        $scope.userFriendStatus = 'Invite';
+                        $scope.userHoverButtonType = 'enabled';
+                    }
+                }, function (error) {
+                   // toaster.pop('error', 'Error!', error.data.message);
+                });
 
-                        if(username.toLowerCase() == $scope.wallOwnerUsername.toLowerCase()) {
-                            $scope.buttonName = 'Pending request';
-                            $scope.disabledButton = 'disabled';
-                        }
-
-                        toaster.pop('success', 'Success!', data.message, defaultNotificationTimeout);
-                    }, function (error) {
-                        toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
-                    });
-            }
+            return true;
         }
 
     }]);

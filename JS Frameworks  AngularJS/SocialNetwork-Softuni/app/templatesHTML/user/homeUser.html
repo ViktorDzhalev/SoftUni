@@ -1,6 +1,12 @@
-<div class="panel panel-default">
+<div class="panel panel-default" ng-if="!isUserWall">
     <div class="panel-body">
         <h3>News feed</h3>
+    </div>
+</div>
+<div class="panel panel-default" ng-if="isUserWall">
+    <div class="panel-body">
+        <h3>{{wallOwnerName}} </h3>
+        <button class="btn btn-warning {{userHoverButtonType}}" ng-click="sendFriendRequest(post.author.username)">{{buttonName}}</button>
     </div>
 </div>
 <div class="row">
