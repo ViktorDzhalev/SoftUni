@@ -1,7 +1,8 @@
 'use strict';
 
 socialNetworkBaseApp.controller('userWallController',
-    ['$scope', '$route', '$routeParams', 'userData', 'friendsData', 'postData', 'authenticationData', 'infoService', function ($scope, $route, $routeParams, userData, friendsData, postData, authenticationData, infoService) {
+    ['$scope', '$route', '$routeParams', 'userData', 'friendsData', 'postData', 'authenticationData', 'infoService',
+        function ($scope, $route, $routeParams, userData, friendsData, postData, authenticationData, infoService) {
         var defaultStartPostId = 0,
             defaultPageSize = 5,
             defaultNotificationTimeout = 2000;
@@ -50,10 +51,6 @@ socialNetworkBaseApp.controller('userWallController',
                     if($scope.user.username === $routeParams.username || $scope.userData.isFriend === true) {
                         $scope.isFriendOrLoggedUser = true;
                         $scope.wallOwner = $scope.userData.username;
-                    }
-
-                    if(!$scope.userData.coverImageData) {
-                        $scope.userData.coverImageData = defaultCoverImageData;
                     }
 
                     if($scope.userData.isFriend) {

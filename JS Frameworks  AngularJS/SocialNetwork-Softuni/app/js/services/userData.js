@@ -83,6 +83,19 @@ socialNetworkBaseApp.factory('userData', ['$resource', 'baseUrl','authentication
                 .get();
         }
 
+            function getUserFullData(username) {
+                var authorization = authenticationData.getAuthorization();
+                return $resource(
+                    baseUrl + 'users/' + username,
+                    null,
+                    {
+                        'get': {
+                            method: 'GET',
+                            headers: {'Authorization': authorization}
+                        }
+                    })
+                    .get();
+            }
 
             return {
                 login: loginUser,
@@ -91,7 +104,8 @@ socialNetworkBaseApp.factory('userData', ['$resource', 'baseUrl','authentication
                 edit: editUser,
                 getLoggedUserData: getLoggedUserData,
                 changePassword: changePassword,
-                searchUsersByName: searchUsersByName
+                searchUsersByName: searchUsersByName,
+                getUserFullData: getUserFullData
 
     }
 }]);
