@@ -336,6 +336,7 @@ socialNetworkBaseApp.controller('userWallController',
             $scope.editComment = editComment;
 
             function showEditCommentForm(commentId) {
+                console.log(33333);
                 $scope.editCommentFormShown = true;
                 $scope.editCommentFormCommentId = commentId;
             }
@@ -366,7 +367,30 @@ socialNetworkBaseApp.controller('userWallController',
                 });
             }
 
+        $scope.user = authenticationData.getLoggedUser();
 
+
+        if(!$routeParams.username || $routeParams.username === $scope.user.username) {
+            $scope.username = $scope.user.username;
+            friendsData.getLoggedUserFriendsPreview()
+                .$promise
+                .then(function (data) {
+                    $scope.totalCount = data.totalCount;
+                    $scope.friends = data.friends;
+                }, function (error) {
+                    infoService.error('Error!');
+                });
+        } else {
+            $scope.username = $routeParams.username;
+            friendsData.getOtherUserFriendsPreview($routeParams.username)
+                .$promise
+                .then(function (data) {
+                    $scope.totalCount = data.totalCount;
+                    $scope.friends = data.friends;
+                }, function (error) {
+                    infoService.error('Error!');
+                });
+        }
         function sendFriendRequest(username) {
             friendsData.sendFriendRequest(username)
                 .$promise

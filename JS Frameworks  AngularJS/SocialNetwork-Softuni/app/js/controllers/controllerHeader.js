@@ -22,8 +22,8 @@ socialNetworkBaseApp.controller('controllerHeader',
                     $scope.requestsCount = data.length;
                     $scope.requests = data;
                 }, function (error) {
-                    toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
-                    credentials.deleteCredentials();
+                    infoService( 'Error!');
+                    authenticationData.deleteCredentials();
                     $route.reload();
                 });
 
@@ -37,7 +37,6 @@ socialNetworkBaseApp.controller('controllerHeader',
                     .$promise
                     .then(function (data) {
                         if(data.length) {
-                            infoService.success('ddddoo');
                             $scope.searchResults = data;
                             $scope.searchResultsCount = data.length;
                             $scope.searchResultsShown = true;
@@ -47,7 +46,6 @@ socialNetworkBaseApp.controller('controllerHeader',
                         }
                     }, function (error) {
                         $scope.searchResultsShown = false;
-                        infoService.error('noo');
                     });
             }
 

@@ -1,12 +1,12 @@
 'use strict';
 
-socialNetworkBaseApp.controller('FriendRequestsController',
-    ['$scope', '$route', 'friendsData', 'infoService', 'defaultProfileImageData', function ($scope, $route, friendsData, infoService, defaultProfileImageData) {
+socialNetworkBaseApp.controller('controllerFriendRequest',
+    ['$scope', '$route', 'friendsData', 'infoService', function ($scope, $route, friendsData, infoService) {
         var defaultNotificationTimeout = 2000;
         $scope.acceptRequest = acceptRequest;
         $scope.rejectRequest = rejectRequest;
         $scope.cancel = cancel;
-        $scope.defaultProfileImageData = defaultProfileImageData;
+
 
         function cancel(requestId) {
             $scope.requestDetailsShown = false;
@@ -16,7 +16,7 @@ socialNetworkBaseApp.controller('FriendRequestsController',
             friendsData.approveFriendRequest(requestId)
                 .$promise
                 .then(function (data) {
-                    toaster.pop('success', 'Success!', data.message, defaultNotificationTimeout);
+                    infoService.success('Success!');
                     friendsData.getFriendRequests()
                         .$promise
                         .then(function (data) {
@@ -27,7 +27,7 @@ socialNetworkBaseApp.controller('FriendRequestsController',
                             }
                         });
                 }, function (error) {
-                    toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                    infoService.error('Error!');
                 });
         }
 
@@ -35,7 +35,7 @@ socialNetworkBaseApp.controller('FriendRequestsController',
             friendsData.rejectFriendRequest(requestId)
                 .$promise
                 .then(function (data) {
-                    toaster.pop('success', 'Success!', data.message, defaultNotificationTimeout);
+                    infoService.success('Success!');
                     friendsData.getFriendRequests()
                         .$promise
                         .then(function (data) {
@@ -46,7 +46,7 @@ socialNetworkBaseApp.controller('FriendRequestsController',
                             }
                         });
                 }, function (error) {
-                    toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                    infoService.error('Error!');
                 });
         }
     }]);

@@ -41,31 +41,7 @@ socialNetworkBaseApp.controller('controllerEditProfile',
                 })
         }
 
-        //$scope.editUser = authenticationData.getLoggedUser();
-        //$scope.editProfile = editProfile;
-        //
-        //function editProfile (editUserData) {
-        //    userData.edit(editUserData)
-        //        .$promise
-        //        .then(function () {
-        //            userData.getLoggedUserData()
-        //                .$promise
-        //                .then(function (currentUserData) {
-        //                    authenticationData.saveLoggedUser(currentUserData);
-        //                    $scope.editProfileForm.$setPristine();
-        //                    infoService.success('YYYES')
-        //                    $location.path('/');
-        //                    $route.reload();
-        //                }, function (error) {
-        //                    // notificationService.success('Edit User Error!');
-        //                    authenticationData.deleteCredentials();
-        //                    $route.reload();
-        //                });
-        //        },
-        //        function (error) {
-        //            //notificationService.error('Edit User Error!');
-        //        })
-      //  }
+
         function formatProfileImgToBase64() {
             $scope.editUserData.profileImageData = 'data:image/jpg;base64,' + $scope.editUserData.profileImageData.base64;
         }

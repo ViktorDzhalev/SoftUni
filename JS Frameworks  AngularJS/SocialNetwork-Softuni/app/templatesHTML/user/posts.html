@@ -112,32 +112,36 @@
                 </div>
                 <button class="btn btn-danger btn-sm delete-post-btn" ng-if="user.username == post.author.username || user.username == comment.author.username" ng-click="deleteComment(post.id, comment.id)">Delete comment</button>
                 <button class="btn btn-success btn-sm edit-post-btn" ng-if="user.username == comment.author.username" ng-click="showEditCommentForm(comment.id)">Edit comment</button>
-            </div>
 
+                <!-- Edit comments-->
 
-            <!-- Edit comments-->
-
-            <div class="modal-open" ng-if="editCommentFormShown && comment.id == editCommentFormCommentId">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="closeEditCommentForm()">x</button>
-                            <h4 class="modal-title">Edit comment</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>Old content: <span class="text-info">{{comment.commentContent}}</span></p>
-                            <div class="form-group">
-                                <label class="control-label" for="focusedInputt">New content:</label>
-                                <input class="form-control" id="focusedInputt" type="text" ng-init="editedCommentContent.commentContent = comment.commentContent" ng-model="editedCommentContent.commentContent">
+                <div class="modal-open" ng-if="editCommentFormShown && comment.id == editCommentFormCommentId">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="closeEditCommentForm()">x</button>
+                                <h4 class="modal-title">Edit comment</h4>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeEditCommentForm()">Close</button>
-                            <button type="button" class="btn btn-primary" ng-click="editComment(post.id, comment.id, editedCommentContent)">Save changes</button>
+                            <div class="modal-body">
+                                <p>Old content: <span class="text-info">{{comment.commentContent}}</span></p>
+                                <div class="form-group">
+                                    <label class="control-label" for="focusedInputt">New content:</label>
+                                    <input class="form-control" id="focusedInputt" type="text" ng-init="editedCommentContent.commentContent = comment.commentContent" ng-model="editedCommentContent.commentContent">
+                                </div>
+                            </div>
+                            <div class="modal-open">
+                                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeEditCommentForm()">Close</button>
+                                <button type="button" class="btn btn-success" ng-click="editComment(post.id, comment.id, editedCommentContent)">Save changes</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+
+
+
 
             <button class="btn btn-success btn-sm pull-right" ng-if="!allCommentsShown && post.totalCommentsCount > 3" ng-click="showAllComments(post.id)">More comments</button>
             <button class="btn btn-success btn-sm pull-right" ng-if="allCommentsShown" ng-click="showLessComments(post.id)">Less comments</button>

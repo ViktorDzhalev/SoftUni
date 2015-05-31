@@ -41,7 +41,6 @@ socialNetworkBaseApp.factory('authenticationData',
         }
 
         function getLoggedUser() {
-            //infoService.error('VVVVVVVVVVVVVVVVVVVVVVVVVV')
             return $localStorage.loggedUser;
         }
 
