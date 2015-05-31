@@ -1,8 +1,8 @@
 'use strict';
 
 socialNetworkBaseApp.controller('userWallController',
-    ['$scope', '$route', '$routeParams', 'userData', 'friendsData', 'postData', 'authenticationData', 'infoService',
-        function ($scope, $route, $routeParams, userData, friendsData, postData, authenticationData, infoService) {
+['$scope', '$route', '$routeParams', 'userData', 'commentData', 'friendsData', 'postData', 'authenticationData', 'infoService',
+    function ($scope, $route, $routeParams, userData, commentData, friendsData, postData, authenticationData, infoService) {
         var defaultStartPostId = 0,
             defaultPageSize = 5;
 
@@ -15,14 +15,15 @@ socialNetworkBaseApp.controller('userWallController',
         $scope.unlikePost = unlikePost;
         $scope.likePost = likePost;
 
-       // $scope.allCommentsShown = false;
-       // $scope.showAllComments = showAllComments;
-       // $scope.showLessComments = showLessComments;
+        $scope.allCommentsShown = false;
+        $scope.showAllComments = showAllComments;
+        $scope.showLessComments = showLessComments;
         $scope.commentButtonName = 'Comment';
         $scope.editButtonName = 'Edit post';
-       // $scope.unlikeComment = unlikeComment;
-       // $scope.likeComment = likeComment;
-        //$scope.deleteComment = deleteComment;
+        $scope.unlikeComment = unlikeComment;
+        $scope.likeComment = likeComment;
+        $scope.deleteComment = deleteComment;
+
         $scope.show = false;
         $scope.showEditPost = false;
         $scope.idPost = 1;
@@ -30,16 +31,7 @@ socialNetworkBaseApp.controller('userWallController',
         $scope.userPreviewShown = false;
         $scope.showUserPreview = showUserPreview;
 
-        $scope.commentEdit= function (id){
-            $scope.show = !$scope.show;
-            $scope.idPost = id;
-            console.log(12);
-        };
 
-        $scope.editPost= function (id){
-            $scope.showEditPost = !$scope.showEditPost;
-            $scope.idPostComment = id;
-        };
 
         getPosts();
         if($routeParams.username) {
@@ -82,7 +74,7 @@ socialNetworkBaseApp.controller('userWallController',
                     .then(function (data) {
                         $scope.posts = data;
                     }, function (error) {
-                       // toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                        infoService.success('Success');
                     });
             } else {
                 $scope.isUserWall = true;
@@ -91,7 +83,7 @@ socialNetworkBaseApp.controller('userWallController',
                     .then(function (data) {
                         $scope.posts = data;
                     }, function (error) {
-                       //toaster.pop('error', 'Error!', error.status);
+                        infoService.errror('Error');
                     });
             }
         }
@@ -107,10 +99,10 @@ socialNetworkBaseApp.controller('userWallController',
                                 post.liked = false;
                                 post.likesCount--;
                             }, function (error) {
-                                //toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                                 infoService.error('Error!');
                             });
                     } else {
-                        //toaster.pop('error', 'Error!', 'You can`t unlike this post!', defaultNotificationTimeout);
+                        infoService.error('Error!');
                     }
                 }
             });
@@ -126,10 +118,10 @@ socialNetworkBaseApp.controller('userWallController',
                                 post.liked = true;
                                 post.likesCount++;
                             }, function (error) {
-                               // toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                                 infoService.error('Error!');
                             });
                     } else {
-                       // toaster.pop('error', 'Error!', 'You can`t like this post!', defaultNotificationTimeout);
+                        infoService.error('Error!');
                     }
                 }
             });
@@ -141,10 +133,10 @@ socialNetworkBaseApp.controller('userWallController',
                     postData.deletePost(postId)
                         .$promise
                         .then(function (data) {
-                           //toaster.pop('success', 'Success!', 'Post deleted successfully.', defaultNotificationTimeout);
+                            infoService.success('Post deleted successfully.');
                             object.splice(index, 1);
                         }, function (error) {
-                           // toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                            infoService.error('Error!');
                         });
                 }
             })
@@ -162,7 +154,7 @@ socialNetworkBaseApp.controller('userWallController',
                     $scope.posts.unshift(data);
                     $route.reload();
                 }, function (error) {
-                   //toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                    infoService.error( 'Error!');
                 })
         }
 
@@ -193,13 +185,187 @@ socialNetworkBaseApp.controller('userWallController',
                             $scope.editPostFormShown = false;
                             $scope.editPostFormPostId = null;
                             post.postContent = data.content;
-                            //toaster.pop('error', 'Success!', 'Post edited successfully!', defaultNotificationTimeout);
+                            infoService.success( 'Post edited successfully!');
                         }, function (error) {
-                           // toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                            infoService.error('Error!');
                         });
                 }
             });
         }
+
+            function showAllComments(postId) {
+                postData.getPostComments(postId)
+                    .$promise
+                    .then(function (data) {
+                        $scope.posts.forEach(function (post) {
+                            if(post.id == postId) {
+                                post.comments = data;
+                                $scope.allCommentsShown = true;
+                            }
+                        });
+                    }, function (error) {
+                        infoService.error('Error!');
+                    })
+            }
+
+            function showLessComments(postId) {
+                $scope.posts.forEach(function (post) {
+                    if(post.id == postId) {
+                        post.comments = post.comments.slice(0, 3);
+                        $scope.allCommentsShown = false;
+                    }
+                });
+            }
+
+        //Comments
+
+            function unlikeComment(postId, commentId) {
+                $scope.posts.forEach(function (post) {
+                    if(post.id == postId) {
+                        post.comments.forEach(function (comment) {
+                            if(comment.id == commentId) {
+                                if(post.author.isFriend || post.wallOwner.isFriend || $scope.user.username == post.author.username) {
+                                    commentData.unlikeComment(postId, commentId)
+                                        .$promise
+                                        .then(function (data) {
+                                            comment.liked = false;
+                                            comment.likesCount--;
+                                        }, function (error) {
+                                            infoService.success('Error!');
+                                        });
+                                } else {
+                                    infoService.error('You can`t unlike this comment!');
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
+            function likeComment(postId, commentId) {
+                $scope.posts.forEach(function (post) {
+                    if(post.id == postId) {
+                        post.comments.forEach(function (comment) {
+                            if(comment.id == commentId) {
+                                if(post.author.isFriend || post.wallOwner.isFriend || $scope.user.username == post.author.username) {
+                                    commentData.likeComment(postId, commentId)
+                                        .$promise
+                                        .then(function (data) {
+                                            comment.liked = true;
+                                            comment.likesCount++;
+                                        }, function (error) {
+                                            infoService.error('Error!');
+                                        });
+                                } else {
+                                    infoService.error( 'You can`t like this comment!');
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
+         //form new comment
+
+        $scope.showNewCommentForm = false;
+        $scope.newCommentFormPostId = null;
+        $scope.toggleNewCommentForm = toggleNewCommentForm;
+        $scope.postComment = postComment;
+
+        function toggleNewCommentForm(postId) {
+            if($scope.showNewCommentForm) {
+                $scope.showNewCommentForm = false;
+                $scope.commentButtonName = 'Comment';
+                $scope.commentContent = '';
+            } else {
+                $scope.showNewCommentForm = true;
+                $scope.newCommentFormPostId = postId;
+                $scope.commentButtonName = 'Hide';
+            }
+        }
+
+        function postComment(commentContent, postId) {
+            $scope.posts.forEach(function (post) {
+                if(post.id == postId) {
+                    if(post.author.isFriend || post.wallOwner.isFriend || $scope.user.username == post.author.username) {
+                        commentData.addComment(commentContent, postId)
+                            .$promise
+                            .then(function (data) {
+                                $scope.showNewCommentForm = false;
+                                $scope.newCommentFormPostId = null;
+                                post.comments.unshift(data);
+                                post.totalCommentsCount++;
+                                infoService.success( 'Comment successfully added.');
+                            }, function (error) {
+                                infoService.error('Error!');
+                            });
+                    } else {
+                        infoService.error('Errror');
+                    }
+                }
+            });
+        }
+
+            function deleteComment(postId, commentId) {
+                $scope.posts.forEach(function (post) {
+                    if(post.id == postId) {
+                        post.comments.forEach(function (comment, index, object) {
+                            if(comment.id == commentId) {
+                                if ($scope.user.username == comment.author.username || $scope.user.username == post.author.username) {
+                                    commentData.deleteComment(postId, commentId)
+                                        .$promise
+                                        .then(function (data) {
+                                            post.totalCommentsCount--;
+                                            infoService.success('Comment deleted successfully.');
+                                            object.splice(index, 1);
+                                        }, function (error) {
+                                            infoService.error('Error!');
+                                        });
+                                }
+                            }
+                        });
+                    }
+                })
+            }
+          //Edit comment
+
+            $scope.editCommentFormShown = false;
+            $scope.editCommentFormCommentId = null;
+            $scope.showEditCommentForm = showEditCommentForm;
+            $scope.closeEditCommentForm = closeEditCommentForm;
+            $scope.editComment = editComment;
+
+            function showEditCommentForm(commentId) {
+                $scope.editCommentFormShown = true;
+                $scope.editCommentFormCommentId = commentId;
+            }
+
+            function closeEditCommentForm(){
+                $scope.editCommentFormShown = false;
+                $scope.editCommentFormCommentId = null;
+            }
+
+            function editComment(postId, commentId, commentContent) {
+                $scope.posts.forEach(function (post) {
+                    if(post.id == postId) {
+                        post.comments.forEach(function (comment) {
+                            if(comment.id == commentId && $scope.user.username == comment.author.username) {
+                                commentData.editComment(commentContent, postId, commentId)
+                                    .$promise
+                                    .then(function (data) {
+                                        $scope.editCommentFormShown = false;
+                                        $scope.editCommentFormCommentId = null;
+                                        comment.commentContent = data.commentContent;
+                                        infoService.success('Comment edited successfully!');
+                                    }, function (error) {
+                                        infoService.error('Error!');
+                                    });
+                            }
+                        })
+                    }
+                });
+            }
+
 
         function sendFriendRequest(username) {
             friendsData.sendFriendRequest(username)
@@ -208,9 +374,9 @@ socialNetworkBaseApp.controller('userWallController',
                     $scope.userData.hasPendingRequest = true;
                     $scope.buttonName = 'Pending request';
                     $scope.disabledButton = 'disabled';
-                   // toaster.pop('success', 'Success!', data.message, defaultNotificationTimeout);
+                    infoService.success( 'Success!');
                 }, function (error) {
-                   //toaster.pop('error', 'Error!', error.data.message, defaultNotificationTimeout);
+                    infoService.error('Error!');
                 });
 
         }
@@ -236,12 +402,12 @@ socialNetworkBaseApp.controller('userWallController',
                         $scope.userHoverButtonType = 'enabled';
                     }
                 }, function (error) {
-                   // toaster.pop('error', 'Error!', error.data.message);
+                    infoService.error('Error!');
                 });
 
             return true;
         }
 
-    }]);
+}]);
 
 

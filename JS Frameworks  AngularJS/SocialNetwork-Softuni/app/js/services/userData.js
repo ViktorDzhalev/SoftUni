@@ -83,19 +83,33 @@ socialNetworkBaseApp.factory('userData', ['$resource', 'baseUrl','authentication
                 .get();
         }
 
-            function getUserFullData(username) {
-                var authorization = authenticationData.getAuthorization();
-                return $resource(
-                    baseUrl + 'users/' + username,
-                    null,
-                    {
-                        'get': {
-                            method: 'GET',
-                            headers: {'Authorization': authorization}
-                        }
-                    })
-                    .get();
-            }
+        function getUserFullData(username) {
+            var authorization = authenticationData.getAuthorization();
+            return $resource(
+                baseUrl + 'users/' + username,
+                null,
+                {
+                    'get': {
+                        method: 'GET',
+                        headers: {'Authorization': authorization}
+                    }
+                })
+                .get();
+        }
+
+        function getUserPreviewData(username) {
+            var authorization = authenticationData.getAuthorization();
+            return $resource(
+                baseUrl + 'users/' + username + '/preview',
+                null,
+                {
+                    'get': {
+                        method: 'GET',
+                        headers: {'Authorization': authorization}
+                    }
+                })
+                .get();
+        }
 
             return {
                 login: loginUser,
@@ -105,7 +119,8 @@ socialNetworkBaseApp.factory('userData', ['$resource', 'baseUrl','authentication
                 getLoggedUserData: getLoggedUserData,
                 changePassword: changePassword,
                 searchUsersByName: searchUsersByName,
-                getUserFullData: getUserFullData
+                getUserFullData: getUserFullData,
+                getUserPreviewData: getUserPreviewData
 
     }
 }]);

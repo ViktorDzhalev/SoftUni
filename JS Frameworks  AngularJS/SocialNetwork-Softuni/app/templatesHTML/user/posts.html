@@ -42,8 +42,19 @@
                         </a>
                         <br/>
 
-                        <div new-comment></div>
+                        <!--Form new comment-->
 
+                        <div class="form-group" ng-if="showNewCommentForm == true && newCommentFormPostId == post.id">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="control-label" for="inputLarge">New comment</label>
+                                    <input class="form-control input-lg" type="text" id="inputLarge" ng-model="newComment.commentContent">
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-primary submit-comment-btn" ng-click="postComment(newComment, post.id)">Submit</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <button class="btn btn-danger btn-sm delete-post-btn" ng-if="user.username == post.wallOwner.username || user.username == post.author.username" ng-click="deletePost(post.id)">Delete post</button>
@@ -71,11 +82,10 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
 
             <!--Comments-->
+
             <div class="panel panel-warning news-feed news-feed-comment col-md-offset-3" ng-repeat="comment in post.comments">
                 <div class="panel-heading">
                     <img src="" ng-src="{{comment.author.profileImageData}}" alt="post.author.name" ng-if="comment.author.profileImageData"/>
@@ -84,17 +94,6 @@
                             {{comment.author.name}}
                         </a>
                         <br/>
-
-                        <div class="panel panel-success user-hover col-md-8" ng-show="commentUserPreviewShown" ng-mouseleave="commentUserPreviewShown = false">
-                            <div class="panel-heading hover-heading">
-                                <img src="" ng-src="{{comment.author.profileImageData}}" alt="post.author.name" ng-if="comment.author.profileImageData"/>
-                                <img src="" ng-src="{{defaultProfileImageData}}" alt="post.author.name" ng-if="!comment.author.profileImageData"/>
-                                <span>{{comment.author.name}}</span>
-                            </div>
-                            <div class="panel-body">
-                                <button class="btn btn-warning {{userHoverButtonType}}" ng-click="sendFriendRequest(comment.author.username, 'commentAuthor')">{{userFriendStatus}}</button>
-                            </div>
-                        </div>
 
                         <span>{{comment.date | date:'dd MMM yyyy HH:mm:ss'}}</span>
                     </div>
@@ -113,9 +112,31 @@
                 </div>
                 <button class="btn btn-danger btn-sm delete-post-btn" ng-if="user.username == post.author.username || user.username == comment.author.username" ng-click="deleteComment(post.id, comment.id)">Delete comment</button>
                 <button class="btn btn-success btn-sm edit-post-btn" ng-if="user.username == comment.author.username" ng-click="showEditCommentForm(comment.id)">Edit comment</button>
+            </div>
 
-                <div edit-comment=""></div>
 
+            <!-- Edit comments-->
+
+            <div class="modal-open" ng-if="editCommentFormShown && comment.id == editCommentFormCommentId">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="closeEditCommentForm()">x</button>
+                            <h4 class="modal-title">Edit comment</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Old content: <span class="text-info">{{comment.commentContent}}</span></p>
+                            <div class="form-group">
+                                <label class="control-label" for="focusedInputt">New content:</label>
+                                <input class="form-control" id="focusedInputt" type="text" ng-init="editedCommentContent.commentContent = comment.commentContent" ng-model="editedCommentContent.commentContent">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeEditCommentForm()">Close</button>
+                            <button type="button" class="btn btn-primary" ng-click="editComment(post.id, comment.id, editedCommentContent)">Save changes</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <button class="btn btn-success btn-sm pull-right" ng-if="!allCommentsShown && post.totalCommentsCount > 3" ng-click="showAllComments(post.id)">More comments</button>
